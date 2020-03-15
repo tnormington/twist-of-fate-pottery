@@ -15,18 +15,19 @@ $args = array(
   'orderby' => 'date'
 );
 
+// $products = Timber::get_posts($args);
 $products = Timber::get_posts($args);
-$formatted_products = array();
+$context['featured_products'] = array();
 
 foreach($products as $product) {
   // $product->display_price = $produce
-  $p = wc_get_product($product->ID);
-  $product->display_price = $p->get_price_html();
+  // $p = wc_get_product($product->ID);
+  $product->display_price = $product->get_price_html();
   // error_log(print_r($product, true));
-  array_push($formatted_products, $product);
+  array_push($context['featured_products'], $product);
 }
 
-$context['featured_products'] = $formatted_products;
+// $context['featured_products'] = $formatted_products;
 
 
 
