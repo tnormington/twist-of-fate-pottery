@@ -11,18 +11,6 @@
     <div class="products-grid">
       {% for post in featured_products %}
         {% include ["partial/tease-product.twig"] %}
-
-        {# <div class="featured-products__product">
-          <a href="{{post.link}}">
-            <img src="{{post.thumbnail.src}}">
-            <div class="featured-products__product__details">
-              <h5>{{post.title}}</h5>
-              <span class="price">
-                {{post.display_price}}
-              </span>
-            </div>
-          </a>
-        </div> #}
       {% endfor %}
     </div>
   </div>
