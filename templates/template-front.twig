@@ -1,0 +1,28 @@
+{% extends "base.twig" %}
+
+{% block hero %}
+	<div class="hero">
+		<img class="hero-logo" src="{{theme.link}}/assets/logo-w-shadow.png">
+	</div>
+{% endblock %}
+
+{% block content %}
+  <div class="featured-products">
+    {% for post in featured_products %}
+      <div class="featured-products__product">
+        <a href="{{post.link}}">
+          <img src="{{post.thumbnail.src}}">
+          <div class="featured-products__product__details">
+            <h5>{{post.title}}</h5>
+            <span class="price">
+              {{post.display_price}}
+            </span>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="text-center mb-3">
+    <a href="/shop" class="btn btn-primary">See Shop</a>
+  </div>
+{% endblock %}
