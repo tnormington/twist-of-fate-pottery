@@ -18,6 +18,13 @@ class="{{body_class}}" data-template="base.twig">
           </button>
           <div class="collapse navbar-collapse" id="main-menu">
             {% include "main-menu.twig" with {'items': menu.get_items} %}
+
+            {% if cart_count > 0 %}
+              <a class="btn btn-primary cart-button" href="/cart">
+                <img class="mr-1" src="{{theme.link}}/assets/cart.svg">
+                Cart <span class="badge badge-light ml-1">{{cart_count}}</span>
+              </a>
+            {% endif %} 
           </div>
         </div>
       </nav>

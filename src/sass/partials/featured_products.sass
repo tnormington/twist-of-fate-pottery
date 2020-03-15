@@ -12,12 +12,17 @@
     align-items: center
     justify-content: center
     position: relative
-    &:hover, &:focus 
+    &:hover, &:focus
+      img
+        box-shadow: 0 4px 50px -10px rgba( #794da3, 1)
       .details
         opacity: 1
         transform: translate(-50%, -50%) scale(1)
+    .title a
+      color: #fff
     img
       width: 100%
+      transition: all 0.2s ease-out
 
 .tease-product .details
   width: 80%

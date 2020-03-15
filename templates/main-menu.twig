@@ -1,5 +1,5 @@
 {% if menu %}
-	<ul class="navbar-nav">
+	<ul class="navbar-nav mr-auto">
 	{% for item in items %}
 		<li class="nav-item {{ item.classes | join(' ') }}">
 			<a class="nav-link" target="{{ item.target }}" href="{{ item.link }}">{{ item.title }}</a>
