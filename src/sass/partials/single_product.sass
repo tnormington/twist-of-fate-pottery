@@ -1,13 +1,18 @@
 .single-product-wrapper
   display: flex
+  flex-wrap: wrap
 
 .single-product__slider
   flex: 0 0 400px
   margin-right: 1rem
   position: relative
+  @include media-breakpoint-down(sm)
+    flex: 1 0 100%
+    margin-right: 0
 
 .single-product__details
   flex: 1 0
+
 
 .tabs.wc-tabs
   display: none
