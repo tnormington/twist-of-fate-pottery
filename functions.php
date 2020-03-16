@@ -76,7 +76,7 @@ class StarterSite extends Timber\Site {
 
 	/** This is where you can register custom post types. */
 	public function register_post_types() {
-
+    include get_stylesheet_directory() . '/includes/cpt-project.php';
 	}
 	/** This is where you can register custom taxonomies. */
 	public function register_taxonomies() {

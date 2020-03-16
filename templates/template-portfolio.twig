@@ -1,0 +1,13 @@
+{% extends "base.twig" %}
+
+{% block content %}
+  <h1>{{post.title}}</h1>
+  
+  <div class="project-grid">
+    {% for post in projects %}
+      <div class="project">
+        <img src="{{post.thumbnail.src}}">
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
