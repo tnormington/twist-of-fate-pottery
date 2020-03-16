@@ -9,3 +9,14 @@
   max-height: 75vh
   height: 75vh
   flex-basis: 75vh
+  @include media-breakpoint-down(sm)
+    max-height: 50vh
+    height: 50vh
+    flex-basis: 50vh
+
+.hero-logo
+  max-width: 100%
+
+// use the dark background for the home page so it matches hero 
+body.home
+  background-color: #040406

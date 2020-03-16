@@ -12,6 +12,12 @@
     align-items: center
     justify-content: center
     position: relative
+    @include media-breakpoint-down(md)
+      flex: 0 0 50%
+      width: 50%
+    @include media-breakpoint-down(sm)
+      flex: 0 0 100%
+      width: 100%
     &:hover, &:focus
       img
         box-shadow: 0 4px 50px -10px rgba( #794da3, 1)
