@@ -7,6 +7,10 @@
 {% endblock %}
 
 {% block content %}
+  <div>
+    {{post.content}}
+  </div>
+
   <div class="woocommerce">
     <div class="products-grid">
       {% for post in featured_products %}
