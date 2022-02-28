@@ -12,7 +12,8 @@ $args = array(
   'posts_per_page' => 6,
   'post_status' => 'publish',
   'order' => 'DESC',
-  'orderby' => 'date'
+  'orderby' => 'date',
+  'category__not_in' => array(149)
 );
 
 // $products = Timber::get_posts($args);
