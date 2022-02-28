@@ -13,7 +13,14 @@ $args = array(
   'post_status' => 'publish',
   'order' => 'DESC',
   'orderby' => 'date',
-  'category__not_in' => array(149)
+  'tax_query' => array(
+    array(
+      'taxonomy' => 'product_cat',
+      'field'    => 'term_id',
+      'terms'    => array(149),
+      'operator' => 'NOT IN'
+      )
+   )
 );
 
 // $products = Timber::get_posts($args);
