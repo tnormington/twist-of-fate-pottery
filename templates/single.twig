@@ -3,9 +3,9 @@
 {% block content %}
 	<div class="content-wrapper">
 		<article class="post-type-{{ post.post_type }}" id="post-{{ post.ID }}">
-		<div style="display:flex; align-items: flex-start;">
-			<img style="margin-right: 1rem;" src="{{ post.thumbnail.src|resize(300) }}">
-			<section class="article-content">
+		<div class="single-post-content">
+			<img src="{{ post.thumbnail.src|resize(300) }}">
+			<section class="main-content">
 				<h1 class="article-h1">{{ post.title }}</h1>
 				<div class="article-body">
 					{{post.content}}
