@@ -5,21 +5,20 @@
 		<article class="post-type-{{ post.post_type }}" id="post-{{ post.ID }}">
 		<div style="display:flex; align-items: flex-start;">
 			<img style="margin-right: 1rem;" src="{{ post.thumbnail.src|resize(300) }}">
-			<div>
+			<section class="article-content">
 				<h1 class="article-h1">{{ post.title }}</h1>
 				<a href="{{ post.link }}">{{ _e('edit') }}</a>
 				<p class="blog-author">
 					<span>By</span><a href="{{post.author.path}}"> {{ post.author.name }} </a><span>&bull;</span> <time datetime="{{ post.date|date('Y-m-d H:i:s') }}">{{ post.date }}</time>
 				</p>
-			</div>
-			</div>
-			<section class="article-content">
+							
+			
 				
 				<div class="article-body">
 					{{post.content}}
 				</div>
 			</section>
-
+			</div>	
 		</article>
 	</div><!-- /content-wrapper -->
 {% endblock %}
