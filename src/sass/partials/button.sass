@@ -1,0 +1,154 @@
+// Button Styles
+// CSS Mask Button Hover Animation inspired by https://codepen.io/pizza3/pen/qmerBv (button-container-3)
+
+$btn-gold: $primary
+$btn-bg: #f9f7f4  // Page background color
+
+// Keyframes for mask animation
+@keyframes ani
+  from
+    -webkit-mask-position: 0 0
+    mask-position: 0 0
+  to
+    -webkit-mask-position: 100% 0
+    mask-position: 100% 0
+
+@keyframes ani2
+  from
+    -webkit-mask-position: 100% 0
+    mask-position: 100% 0
+  to
+    -webkit-mask-position: 0 0
+    mask-position: 0 0
+
+// Button container wrapper - created by JS
+.btn-mask-container
+  position: relative
+  display: inline-block
+  overflow: hidden
+  border-radius: 50px
+  border: 2px solid $btn-gold
+  background: $btn-bg
+
+  // The .mas span shows gold bg + white text (revealed on hover)
+  // Hidden until .ready class is added by JS
+  .mas
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    background-color: $btn-gold
+    color: #fff
+    font-size: 0.875rem
+    font-weight: 600
+    text-transform: uppercase
+    letter-spacing: 0.5px
+    border-radius: 50px
+    pointer-events: none
+    padding: 0.75rem 2rem
+    opacity: 0
+    visibility: hidden
+
+  // Show .mas only when ready
+  &.ready .mas
+    opacity: 1
+    visibility: visible
+
+  // Button covers .mas with page bg color + gold text (default state)
+  // Mask animates to reveal .mas on hover
+  .mask-btn,
+  button,
+  a,
+  input[type="submit"]
+    position: relative
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 100%
+    height: 100%
+    padding: 0.75rem 2rem !important
+    margin: 0 !important
+    background: $btn-bg !important
+    -webkit-mask: url("https://raw.githubusercontent.com/pizza3/asset/master/natureSmaller.png")
+    mask: url("https://raw.githubusercontent.com/pizza3/asset/master/natureSmaller.png")
+    -webkit-mask-size: 7100% 100%
+    mask-size: 7100% 100%
+    -webkit-mask-position: 0 0
+    mask-position: 0 0
+    border: none !important
+    color: $btn-gold !important
+    font-size: 0.875rem !important
+    font-weight: 600 !important
+    text-transform: uppercase
+    letter-spacing: 0.5px
+    text-decoration: none !important
+    border-radius: 50px !important
+    cursor: pointer
+
+    // Disable fallback transition - let mask animation handle it
+    transition: none !important
+
+    &:hover
+      // Override fallback hover colors - mask handles the visual change
+      background: $btn-bg !important
+      color: $btn-gold !important
+      -webkit-animation: ani 0.7s steps(70) forwards
+      animation: ani 0.7s steps(70) forwards
+
+  // Reverse animation only after first hover
+  &.has-hovered
+    .mask-btn,
+    button,
+    a,
+    input[type="submit"]
+      &:not(:hover)
+        -webkit-animation: ani2 0.7s steps(70) forwards
+        animation: ani2 0.7s steps(70) forwards
+
+// WordPress block button wrapper fix
+.wp-block-button
+  position: relative
+  z-index: 1
+
+  .btn-mask-container
+    width: 100%
+
+// Base styles for buttons before JS loads (fallback)
+.btn.btn-primary,
+.btn-primary,
+.wp-block-button__link,
+.wp-element-button,
+.woocommerce ul.products li.product .button,
+.woocommerce ul.products li.product a.button,
+.woocommerce a.button,
+.woocommerce a.button.alt,
+.woocommerce button.button,
+.woocommerce button.button.alt,
+.woocommerce input.button,
+.woocommerce input.button.alt,
+.woocommerce #respond input#submit,
+.woocommerce #respond input#submit.alt,
+.tease-product .button,
+.wpcf7-form input[type="submit"]
+  display: inline-block
+  padding: 0.75rem 2rem !important
+  border-radius: 50px !important
+  background-color: $btn-bg !important
+  border: 2px solid $btn-gold !important
+  color: $btn-gold !important
+  font-size: 0.875rem !important
+  font-weight: 600 !important
+  text-transform: uppercase
+  letter-spacing: 0.5px
+  text-decoration: none !important
+  line-height: 1.4 !important
+  cursor: pointer
+  transition: all 0.3s ease !important
+
+  &:hover
+    background-color: $btn-gold !important
+    color: #fff !important

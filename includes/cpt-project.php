@@ -1,7 +1,5 @@
 <?php
 
-error_log('cpt-project.php loaded');
-
 function project_cpt() {
 
   $labels = array(

@@ -2,7 +2,7 @@
 {{ fn('timber_set_product', post) }}
 
   {% if post.thumbnail %}
-      <img src="{{ post.thumbnail.src|resize(shop_thumbnail_image_size) }}" />
+      <img src="{{ post.thumbnail.src|resize(400) }}" />
   {% endif %}
 
 

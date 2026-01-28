@@ -96,7 +96,9 @@ class StarterSite extends Timber\Site {
 		$context['menu']  = new Timber\Menu();
     $context['site']  = $this;
     
-    $context['cart_count'] = !is_cart() ? WC()->cart->get_cart_contents_count() : 0;
+    if(function_exists('get_cart_contents_count')) {
+    //$context['cart_count'] = !is_cart() ? WC()->cart->get_cart_contents_count() : 0;
+    }
 
 		return $context;
 	}
@@ -196,3 +198,107 @@ remove_action( 'woocommerce_after_single_product_summary',
 'woocommerce_output_related_products', 20 );
 remove_action( 'woocommerce_before_shop_loop_item_title',
 'woocommerce_template_loop_product_thumbnail' );
+
+/**
+ * Custom Events List Shortcode - Vertical list grouped by month
+ * Usage: [events_list show_past="no" limit="20"]
+ */
+function tof_events_list_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'show_past' => 'no',
+        'limit' => -1,
+    ), $atts);
+
+    // Query Tickera events
+    $args = array(
+        'post_type' => 'tc_events',
+        'posts_per_page' => $atts['limit'],
+        'meta_key' => 'event_date_time',
+        'orderby' => 'meta_value',
+        'order' => 'ASC',
+        'post_status' => 'publish',
+    );
+
+    // Filter out past events if requested
+    if ($atts['show_past'] === 'no') {
+        $args['meta_query'] = array(
+            array(
+                'key' => 'event_date_time',
+                'value' => current_time('Y-m-d H:i'),
+                'compare' => '>=',
+                'type' => 'DATETIME',
+            ),
+        );
+    }
+
+    $events = get_posts($args);
+
+    if (empty($events)) {
+        return '<p class="events-list__empty">No upcoming events scheduled.</p>';
+    }
+
+    // Group events by month
+    $grouped_events = array();
+    foreach ($events as $event) {
+        $event_date = get_post_meta($event->ID, 'event_date_time', true);
+        if ($event_date) {
+            $month_key = date('Y-m', strtotime($event_date));
+            $month_label = date('F Y', strtotime($event_date));
+            if (!isset($grouped_events[$month_key])) {
+                $grouped_events[$month_key] = array(
+                    'label' => $month_label,
+                    'events' => array(),
+                );
+            }
+            $grouped_events[$month_key]['events'][] = $event;
+        }
+    }
+
+    // Build output
+    $output = '<div class="events-list">';
+
+    foreach ($grouped_events as $month_key => $month_data) {
+        $output .= '<div class="events-list__month">';
+        $output .= '<h3 class="events-list__month-title">' . esc_html($month_data['label']) . '</h3>';
+        $output .= '<div class="events-list__items">';
+
+        foreach ($month_data['events'] as $event) {
+            $event_date = get_post_meta($event->ID, 'event_date_time', true);
+            $event_end_date = get_post_meta($event->ID, 'event_end_date_time', true);
+            $event_location = get_post_meta($event->ID, 'event_location', true);
+            $event_logo = get_post_meta($event->ID, 'event_logo_file_url', true);
+            $presentation_page = get_post_meta($event->ID, 'event_presentation_page', true);
+            $event_url = !empty($presentation_page) && is_numeric($presentation_page)
+                ? get_permalink($presentation_page)
+                : get_permalink($event->ID);
+
+            $day = date('d', strtotime($event_date));
+            $day_name = date('D', strtotime($event_date));
+            $time = date('g:i A', strtotime($event_date));
+
+            $output .= '<div class="events-list__item">';
+            $output .= '<div class="events-list__date">';
+            $output .= '<span class="events-list__day">' . $day . '</span>';
+            $output .= '<span class="events-list__day-name">' . $day_name . '</span>';
+            $output .= '</div>';
+            $output .= '<div class="events-list__content">';
+            $output .= '<h4 class="events-list__title"><a href="' . esc_url($event_url) . '">' . esc_html($event->post_title) . '</a></h4>';
+            $output .= '<div class="events-list__meta">';
+            $output .= '<span class="events-list__time">' . $time . '</span>';
+            if (!empty($event_location)) {
+                $output .= '<span class="events-list__location">' . esc_html($event_location) . '</span>';
+            }
+            $output .= '</div>';
+            $output .= '</div>';
+            $output .= '</div>';
+        }
+
+        $output .= '</div>'; // .events-list__items
+        $output .= '</div>'; // .events-list__month
+    }
+
+    $output .= '</div>'; // .events-list
+
+    return $output;
+}
+add_shortcode('events_list', 'tof_events_list_shortcode');

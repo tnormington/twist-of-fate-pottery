@@ -2,14 +2,21 @@
 
 {% block hero %}
 	<div class="hero">
-		<img class="hero-logo" src="{{theme.link}}/assets/logo-w-shadow.png">
+    <div class="hero-left">
+      <div class="hero-left__inner">
+        <img class="hero-logo" src="{{theme.link}}/assets/logo-w-shadow.png">
+      </div>
+    </div>
+    <div class="hero-content">
+    <div class="hero-content__inner">
+      {{post.content}}
+      </div>
+    </div>
 	</div>
 {% endblock %}
 
 {% block content %}
-  <div>
-    {{post.content}}
-  </div>
+  
 
   <div class="woocommerce">
     <div class="products-grid">

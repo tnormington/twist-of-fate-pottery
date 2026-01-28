@@ -1,64 +1,129 @@
+// Masonry layout using CSS columns
 .products-grid
-  margin: 2rem -10px
-  display: flex
-  flex-wrap: wrap
-  align-items: center
-  justify-content: space-between
-  .tease-product
-    flex: 0 0 33%
-    width: 33%
-    margin-bottom: 20px
-    padding: 0 10px
-    display: flex
-    align-items: center
-    justify-content: center
-    position: relative
-    margin-bottom: 1rem !important
-    @include media-breakpoint-down(md)
-      flex: 0 0 50%
-      width: 50%
-    @include media-breakpoint-down(sm)
-      flex: 0 0 100%
-      width: 100%
-    &:hover, &:focus
-      img
-        box-shadow: 0 4px 50px -10px rgba( #794da3, 1)
-      .details
-        opacity: 1
-        transform: translate(-50%, -50%) scale(1)
-        border: 1px solid $primary
-    .title a
-      color: #fff
-    img
-      width: 100%
-      transition: all 0.2s ease-out
-      box-shadow: 0 4px 50px -10px rgba( black, 1)
+  margin: 2rem 0
+  column-count: 3
+  column-gap: 1.5rem
+  @include media-breakpoint-down(md)
+    column-count: 2
+    column-gap: 1.25rem
+  @include media-breakpoint-down(sm)
+    column-count: 1
 
-.tease-product .details
-  width: 80%
-  height: 80%
-  position: absolute
-  left: 50%
-  top: 50%
-  transform: translate(-50%, -50%) scale(0.5)
-  background: rgba( black, 0.4 )
+body .content-area .tease-product,
+body .main-content .tease-product
+  display: inline-block
+  width: 100%
+  background: #fff
+  border-radius: 8px
+  overflow: hidden
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06)
+  transition: all 0.2s ease-out
+  margin-bottom: 1.5rem
+  break-inside: avoid
+  img
+    width: 100%
+  @include media-breakpoint-down(md)
+    margin-bottom: 1.25rem
+  &:hover
+    transform: translateY(-4px)
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1)
+
+.tease-product__image
+  width: 100%
+  overflow: hidden
+  background: #f5f5f5
+  img
+    width: 100%
+    height: auto
+    display: block
+    transition: transform 0.3s ease-out
+
+.tease-product .details,
+.tease-product__details
+  padding: 1.25rem
+  text-align: center
   display: flex
-  padding: 10px
   flex-direction: column
   align-items: center
-  justify-content: center
-  color: #fff
-  opacity: 0
-  transition: all 0.2s ease-out
-  // .price
-  //   font-size: 20px
+  gap: 0.5rem
 
-.woocommerce div.product p.price,
-.woocommerce div.product span.price
-  font-size: 20px
-  color: #fff
-  margin-bottom: 8px
+.tease-product .title,
+.tease-product__title
+  font-family: $headings-font-family
+  font-size: 1.1rem
+  font-weight: 600
+  margin: 0
+  a
+    color: #2d2d2d
+    text-decoration: none
+    &:hover
+      color: $primary
+
+.tease-product .price,
+.woocommerce ul.products li.product .price
+  font-size: 1rem
+  color: #5a5a5a
+  margin: 0.25rem 0
+  del
+    color: #999
+    margin-right: 0.5rem
   ins
     text-decoration: none
-    font-size: 24px
-    font-weight: 900
+    font-weight: 700
+    color: #2d2d2d
+
+// Button styles moved to partials/button.sass
+
+// WooCommerce default product grid - masonry layout
+.woocommerce ul.products
+  column-count: 3
+  column-gap: 1.5rem
+  display: block
+  @include media-breakpoint-down(md)
+    column-count: 2
+    column-gap: 1.25rem
+  @include media-breakpoint-down(sm)
+    column-count: 1
+
+.woocommerce ul.products li.product
+  display: inline-block
+  width: 100%
+  float: none
+  margin: 0 0 1.5rem 0 !important
+  padding: 0
+  background: #fff
+  border-radius: 8px
+  overflow: hidden
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06)
+  transition: all 0.2s ease-out
+  text-align: center
+  break-inside: avoid
+  @include media-breakpoint-down(md)
+    margin-bottom: 1.25rem !important
+  &:hover
+    transform: translateY(-4px)
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1)
+  a img
+    width: 100%
+    height: auto
+    margin: 0
+    display: block
+  .woocommerce-loop-product__title
+    font-family: $headings-font-family
+    font-size: 1.1rem
+    padding: 1rem 1rem 0.5rem
+    color: #2d2d2d
+  .price
+    padding: 0 1rem
+  .button
+    margin: 1rem
+
+// Single product page price
+.woocommerce div.product p.price,
+.woocommerce div.product span.price
+  font-size: 1.5rem
+  color: #2d2d2d
+  margin-bottom: 1rem
+  ins
+    text-decoration: none
+    font-weight: 700
