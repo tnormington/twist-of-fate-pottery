@@ -194,10 +194,75 @@ function timber_set_product( $post ) {
   // }
 }
 
+/**
+ * Check if a product is in stock
+ * @param int $product_id
+ * @return bool
+ */
+function is_product_in_stock( $product_id ) {
+  $product = wc_get_product( $product_id );
+  if ( ! $product ) {
+    return true;
+  }
+  return $product->is_in_stock();
+}
+
+/**
+ * Get the remaining stock quantity for a product
+ * @param int $product_id
+ * @return int|string Stock quantity or 'Sold Out' if out of stock
+ */
+function get_product_stock_quantity( $product_id ) {
+  if ( function_exists( 'tickera_get_event_tickets_count_left' ) ) {
+    $left = tickera_get_event_tickets_count_left( $product_id );
+    if ( $left === false || is_null( $left ) ) {
+      return '';
+    }
+    if ( (int) $left <= 0 ) {
+      return 'Sold Out';
+    }
+    return (int) $left;
+  }
+
+  // Fallback to WooCommerce stock
+  $product = wc_get_product( $product_id );
+  if ( ! $product ) {
+    return '';
+  }
+
+  $stock = $product->get_stock_quantity();
+  if ( is_null( $stock ) ) {
+    return '';
+  }
+
+  if ( $stock <= 0 ) {
+    return 'Sold Out';
+  }
+
+  return (int) $stock;
+}
+
 remove_action( 'woocommerce_after_single_product_summary',
 'woocommerce_output_related_products', 20 );
 remove_action( 'woocommerce_before_shop_loop_item_title',
 'woocommerce_template_loop_product_thumbnail' );
+
+/**
+ * Replace "Read More" button with "Sold Out" button for out-of-stock products on shop loop
+ */
+add_action( 'woocommerce_after_shop_loop_item', function() {
+  global $product;
+
+  if ( $product && ! $product->is_in_stock() ) {
+    // Remove the "Read More" link
+    remove_action( 'woocommerce_after_shop_loop_item', 'woocommerce_template_loop_product_link_close', 5 );
+
+    // Output the sold out button
+    echo '<button type="button" class="button sold-out-btn" disabled>';
+    echo esc_html__( 'Sold Out', 'woocommerce' );
+    echo '</button>';
+  }
+}, 15 );
 
 /**
  * Custom Events List Shortcode - Vertical list grouped by month
@@ -287,6 +352,16 @@ function tof_events_list_shortcode($atts) {
             $output .= '<span class="events-list__time">' . $time . '</span>';
             if (!empty($event_location)) {
                 $output .= '<span class="events-list__location">' . esc_html($event_location) . '</span>';
+            }
+            if (function_exists('tickera_get_event_tickets_count_left')) {
+                $tickets_left = tickera_get_event_tickets_count_left($event->ID);
+                if (!is_null($tickets_left) && $tickets_left !== false) {
+                    if ((int) $tickets_left <= 0) {
+                        $output .= '<span class="events-list__tickets sold-out-text">Sold Out</span>';
+                    } else {
+                        $output .= '<span class="events-list__tickets tickets-available">' . (int) $tickets_left . ' ' . ((int) $tickets_left === 1 ? 'ticket' : 'tickets') . ' left</span>';
+                    }
+                }
             }
             $output .= '</div>';
             $output .= '</div>';

@@ -72,6 +72,50 @@ body .main-content .tease-product
     font-weight: 700
     color: #2d2d2d
 
+// Product image wrapper with position relative for badge positioning
+.product-image-wrapper
+  position: relative
+  display: inline-block
+  width: 100%
+  img
+    width: 100%
+    display: block
+
+// Sold Out Badge
+.sold-out-badge
+  position: absolute
+  top: 1rem
+  right: 1rem
+  background: rgba(0, 0, 0, 0.85)
+  color: #fff
+  padding: 0.5rem 1rem
+  border-radius: 4px
+  font-size: 0.875rem
+  font-weight: 600
+  letter-spacing: 0.05em
+  text-transform: uppercase
+  z-index: 10
+
+// Sold Out Button - disabled state styling
+.sold-out-btn
+  background-color: #ccc
+  color: #666
+  border: none
+  padding: 0.75rem 1.5rem
+  border-radius: 4px
+  cursor: not-allowed
+  opacity: 0.6
+  font-weight: 600
+  transition: all 0.2s ease
+  &:hover
+    background-color: #ccc
+    color: #666
+    opacity: 0.6
+  &:disabled
+    background-color: #ccc
+    color: #666
+    opacity: 0.6
+
 // Button styles moved to partials/button.sass
 
 // WooCommerce default product grid - masonry layout
@@ -127,3 +171,17 @@ body .main-content .tease-product
   ins
     text-decoration: none
     font-weight: 700
+
+// Ticket count display in product listing
+.ticket-count
+  font-size: 0.9rem
+  font-weight: 500
+  margin: 0.5rem 0
+
+.tickets-available
+  color: #27ae60
+  font-weight: 600
+
+.sold-out-text
+  color: #e74c3c
+  font-weight: 600

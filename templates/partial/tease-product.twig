@@ -2,7 +2,12 @@
 {{ fn('timber_set_product', post) }}
 
   {% if post.thumbnail %}
-      <img src="{{ post.thumbnail.src|resize(400) }}" />
+      <div class="product-image-wrapper">
+          <img src="{{ post.thumbnail.src|resize(400) }}" />
+          {% if not fn('is_product_in_stock', post.ID) %}
+              <div class="sold-out-badge">Sold Out</div>
+          {% endif %}
+      </div>
   {% endif %}
 
 
@@ -11,6 +16,17 @@
   <div class="details">
 
     <h3 class="title"><a href="{{post.link}}">{{post.title}}</a></h3>
+
+    {% set stock_qty = fn('get_product_stock_quantity', post.ID) %}
+    {% if stock_qty %}
+        <div class="ticket-count">
+            {% if stock_qty == 'Sold Out' %}
+                <span class="sold-out-text">{{ stock_qty }}</span>
+            {% else %}
+                <span class="tickets-available">{{ stock_qty }} {{ stock_qty == 1 ? 'ticket' : 'tickets' }} left</span>
+            {% endif %}
+        </div>
+    {% endif %}
 
     {% do action( 'woocommerce_after_shop_loop_item_title' ) %}
     {% do action( 'woocommerce_after_shop_loop_item' ) %}

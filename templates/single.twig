@@ -7,11 +7,21 @@
 			<img src="{{ post.thumbnail.src|resize(300) }}">
 			<section class="main-content">
 				<h1 class="article-h1">{{ post.title }}</h1>
+				{% set stock_qty = fn('get_product_stock_quantity', post.ID) %}
+				{% if stock_qty %}
+					<div class="ticket-count-single">
+						{% if stock_qty == 'Sold Out' %}
+							<span class="sold-out-text">{{ stock_qty }}</span>
+						{% else %}
+							<span class="tickets-available">{{ stock_qty }} {{ stock_qty == 1 ? 'ticket' : 'tickets' }} left</span>
+						{% endif %}
+					</div>
+				{% endif %}
 				<div class="article-body">
 					{{post.content}}
 				</div>
 			</section>
-			</div>	
+			</div>
 		</article>
 	</div><!-- /content-wrapper -->
 {% endblock %}
