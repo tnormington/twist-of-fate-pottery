@@ -200,6 +200,15 @@ function timber_set_product( $post ) {
  * @return bool
  */
 function is_product_in_stock( $product_id ) {
+  // Check Tickera ticket count first (source of truth for event tickets)
+  if ( function_exists( 'tickera_get_event_tickets_count_left' ) ) {
+    $left = tickera_get_event_tickets_count_left( $product_id );
+    if ( $left !== false && ! is_null( $left ) ) {
+      return (int) $left > 0;
+    }
+  }
+
+  // Fallback to WooCommerce stock status for non-ticketed products
   $product = wc_get_product( $product_id );
   if ( ! $product ) {
     return true;
@@ -253,7 +262,7 @@ remove_action( 'woocommerce_before_shop_loop_item_title',
 add_action( 'woocommerce_after_shop_loop_item', function() {
   global $product;
 
-  if ( $product && ! $product->is_in_stock() ) {
+  if ( $product && ! is_product_in_stock( $product->get_id() ) ) {
     // Remove the "Read More" link
     remove_action( 'woocommerce_after_shop_loop_item', 'woocommerce_template_loop_product_link_close', 5 );
 
