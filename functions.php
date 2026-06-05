@@ -200,11 +200,21 @@ function timber_set_product( $post ) {
  * @return bool
  */
 function is_product_in_stock( $product_id ) {
-  // Check Tickera ticket count first (source of truth for event tickets)
-  if ( function_exists( 'tickera_get_event_tickets_count_left' ) ) {
-    $left = tickera_get_event_tickets_count_left( $product_id );
-    if ( $left !== false && ! is_null( $left ) ) {
-      return (int) $left > 0;
+  // Check Tickera ticket count first (source of truth for event tickets).
+  // tickera_get_event_tickets_count_left() expects a tc_events event ID, not a
+  // WooCommerce product ID. Ticket products store their event ID in _event_name.
+  if ( function_exists( 'tickera_get_event_tickets_count_left' )
+       && 'yes' === get_post_meta( $product_id, '_tc_is_ticket', true ) ) {
+    $event_id = get_post_meta( $product_id, '_event_name', true );
+    if ( $event_id ) {
+      $left = tickera_get_event_tickets_count_left( $event_id );
+      if ( $left !== false && ! is_null( $left ) ) {
+        // Non-numeric (e.g. '∞') means unlimited availability.
+        if ( ! is_numeric( $left ) ) {
+          return true;
+        }
+        return (int) $left > 0;
+      }
     }
   }
 
@@ -222,15 +232,26 @@ function is_product_in_stock( $product_id ) {
  * @return int|string Stock quantity or 'Sold Out' if out of stock
  */
 function get_product_stock_quantity( $product_id ) {
-  if ( function_exists( 'tickera_get_event_tickets_count_left' ) ) {
-    $left = tickera_get_event_tickets_count_left( $product_id );
-    if ( $left === false || is_null( $left ) ) {
-      return '';
+  // tickera_get_event_tickets_count_left() expects a tc_events event ID, not a
+  // WooCommerce product ID. Ticket products store their event ID in _event_name.
+  if ( function_exists( 'tickera_get_event_tickets_count_left' )
+       && 'yes' === get_post_meta( $product_id, '_tc_is_ticket', true ) ) {
+    $event_id = get_post_meta( $product_id, '_event_name', true );
+    if ( $event_id ) {
+      $left = tickera_get_event_tickets_count_left( $event_id );
+      if ( $left === false || is_null( $left ) ) {
+        return '';
+      }
+      // Non-numeric (e.g. '∞') means unlimited availability; show no count.
+      if ( ! is_numeric( $left ) ) {
+        return '';
+      }
+      if ( (int) $left <= 0 ) {
+        return 'Sold Out';
+      }
+      return (int) $left;
     }
-    if ( (int) $left <= 0 ) {
-      return 'Sold Out';
-    }
-    return (int) $left;
+    return '';
   }
 
   // Fallback to WooCommerce stock
